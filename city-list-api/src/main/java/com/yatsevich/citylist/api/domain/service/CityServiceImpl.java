@@ -21,6 +21,9 @@ import org.springframework.stereotype.Service;
 import javax.naming.OperationNotSupportedException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,8 +45,8 @@ public class CityServiceImpl implements CityService {
 
     List<CityEntity> defaultCities = new ArrayList<>();
 
-    try (CSVReader csvReader = new CSVReaderBuilder(
-        new FileReader(new ClassPathResource("initialdata/cities.csv").getFile().toPath().toString())).withSkipLines(1)
+    try (InputStream inputStream = new ClassPathResource("cities.csv").getInputStream();
+            CSVReader csvReader = new CSVReaderBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).withSkipLines(1)
             .build()) {
       String[] line;
       while ((line = csvReader.readNext()) != null) {
