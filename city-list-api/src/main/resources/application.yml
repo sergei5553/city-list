@@ -1,0 +1,35 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+  error:
+    whitelabel:
+      enabled: false
+
+springdoc:
+  show-actuator: false
+
+security:
+  basic:
+    fullAccessUser:
+      username: admin
+      password: admin123
+    readOnlyUser:
+      username: user
+      password: user123
+  cors:
+      allowed-origins: http://localhost:3000
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+cities:
+  defaultPageSize: 10
+  version: v1

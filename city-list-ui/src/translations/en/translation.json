@@ -1,0 +1,40 @@
+{
+  "header": {
+    "title": "City List UI",
+    "username": "User name: ",
+    "link": {
+      "login": "Login",
+      "logout": "Logout"
+    }
+  },
+  "city": {
+    "stat": {
+      "infoText": "The amount of cities is "
+    },
+    "search": {
+      "placeholder": "Search city by name"
+    },
+    "list": {
+      "emptyList": "No city found"
+    },
+    "edit": {
+      "validationError": "Please fill in city name or image URL",
+      "updateError": "The city was not updated",
+      "namePlaceHolder": "New city name...",
+      "URLPlaceHolder": "New image URL...",
+      "saveButton": "Save",
+      "closeButton": "Close"
+    }
+  },
+  "loginPage": {
+    "authenticationError": "An authentication error has occurred.",
+    "incorrectInputError": "The username or password provided are incorrect!",
+    "submitButton": "Login",
+    "usernamePlaceholder": "Username",
+    "passwordPlaceholder": "Password"
+  },
+  "mainPage": {
+    "apiCommunicationError": "Unexpected error during communication with API",
+    "header": "Cities"
+  }
+}
