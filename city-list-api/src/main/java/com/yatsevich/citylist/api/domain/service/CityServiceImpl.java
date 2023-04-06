@@ -47,8 +47,8 @@ public class CityServiceImpl implements CityService {
             .build()) {
       String[] line;
       while ((line = csvReader.readNext()) != null) {
-        CityEntity book = CityEntity.builder().id(line[0]).name(line[1]).photo(line[2]).build();
-        defaultCities.add(book);
+        CityEntity city = CityEntity.builder().id(line[0]).name(line[1]).photo(line[2]).build();
+        defaultCities.add(city);
       }
       cityRepository.saveAll(defaultCities);
     } catch (IOException | CsvValidationException e) {
