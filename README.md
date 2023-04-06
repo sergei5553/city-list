@@ -64,6 +64,11 @@ Note: You can use IntelliJ IDEA to build and run application using GUI.
   ```
   docker-compose up
   ```
+Note: if you want to degug application on your localhost you need to start Mongo DB only in Docker. In this case you will run app from IDE.
+You need to clean up docker compose file. The result should be:
+
+![docker-mongo.png](documentation%2Fdocker-mongo.png)
+
 
 ## Running city-list-ui application for development use only (run npm)
 
@@ -99,8 +104,9 @@ Note: You can use IntelliJ IDEA to build and run application using GUI.
  The gif below shows Swagger functionality
 ![DemoSwagger.gif](documentation%2FDemoSwagger.gif)
 
-## How to run MongoDB using docker
-![RunMongoInDocker.gif](documentation%2FRunMongoInDocker.gif)
+## How to run application using docker
+[![Watch the video](https://i.imgur.com/vKb2F1B.png)](https://1drv.ms/v/s!Agy9rAmpfPqxg6hLRLwRCN-wGMT-nQ?e=vTODoD)
+
 
 ## How to run application from IntelliJ IDEA
 ![RunUsingIDE.gif](documentation%2FRunUsingIDE.gif)
