@@ -43,32 +43,29 @@ You can take a look at endpoint documentation using this URL http://localhost:80
 
   `city-list-ui` uses [`Semantic UI React`](https://react.semantic-ui.com/) as CSS-styled framework.
 
+## Build city-list application using Maven
 
+- **city-list-api**
 
-## Start Environment
+  - Open a terminal and navigate to parent folder folder
+
+  - Run the following `Maven` command to build the application
+    ```
+    mvn clean install
+    ```
+
+Note: You can use IntelliJ IDEA to build and run application using GUI.
+
+## Start Application
 
 - In a terminal, make sure you are inside [city-list-api](city-list-api) root folder and see [docker-compose.yml](city-list-api%2Fdocker-compose.yml)
 
 - Run the following command to start docker-compose containers. It will start MongoDB.
   ```
-  docker-compose up -d
+  docker-compose up
   ```
 
-## Running city-list application using Maven
-
-- **city-list-api**
-
-    - Open a terminal and navigate to parent folder folder
-
-    - Run the following `Maven` command to start the application
-      ```
-      mvn clean install -DskipTests
-      ```
-    -  java -jar city-list-api/target/city-list-api-0.0.1-SNAPSHOT.jar
- 
-Note: You can use IntelliJ IDEA to build and run application using GUI.
-
-## Running city-list-ui application for development use only
+## Running city-list-ui application for development use only (run npm)
 
 - **city-list-ui**
 
