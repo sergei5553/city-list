@@ -14,7 +14,7 @@
 	<description>The city list application</description>
 	<packaging>pom</packaging>
 	<modules>
-		<module>city-list-api</module>
 		<module>city-list-ui</module>
+		<module>city-list-api</module>
 	</modules>
 </project>

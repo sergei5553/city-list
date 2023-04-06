@@ -1,8 +1,28 @@
 services:
-  mongo:
-    image: mongo
-    container_name: city-list-mongo
+  web:
+    build: .
     ports:
-      - "27017:27017"
-    volumes:
-      - ./data:/data/db
+      - "8080:8080"
+    depends_on:
+      - mongo
+    container_name: city-list
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/city-list
+    networks:
+      - app-network
+    restart: always
+
+  mongo:
+      image: mongo
+      container_name: city-list-mongo
+      ports:
+        - "27017:27017"
+      volumes:
+        - ./data:/data/db
+      networks:
+        - app-network
+      restart: always
+
+networks:
+  app-network:
+    driver: bridge
