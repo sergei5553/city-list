@@ -1,7 +1,4 @@
 const prod = {
-  url: {
-    CITY_API_BASE_URL: 'http://localhost:8080',
-  },
   contextName: {
     CITY_API_CONTEXT_NAME: 'api',
   },
@@ -17,9 +14,6 @@ const prod = {
 };
 
 const dev = {
-  url: {
-    CITY_API_BASE_URL: 'http://localhost:8080',
-  },
   contextName: {
     CITY_API_CONTEXT_NAME: 'api',
   },
