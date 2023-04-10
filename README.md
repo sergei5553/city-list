@@ -1,6 +1,6 @@
 ## Description
 The goal of this project is to implement an application called 'city-list' to manage cities. The project contains back-end [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application called `city-list-api` 
-and font-end [ReactJS](https://reactjs.org/) application called `city-list-ui`. The back-end application uses [`MongoDB`](https://www.mongodb.com) as data storage. The initial data for DB is loaded from [cities.csv](city-list-api%2Fsrc%2Fmain%2Fresources%2Fcities.csv) sitting in resource folder. [`Basic Authentication`](https://en.wikipedia.org/wiki/Basic_access_authentication) is implemented to secure the applications.
+and font-end [ReactJS](https://reactjs.org/) application called `city-list-ui`. The back-end application uses [`MongoDB`](https://www.mongodb.com) as data storage. The initial data for DB is loaded from [cities.csv](city-list-api%2Fsrc%2Fmain%2Fresources%2Fcities.csv) sitting in resource folder. [`Basic Authentication`](https://en.wikipedia.org/wiki/Basic_access_authentication) is implemented to secure the applications. [`MongoDB test container`](https://www.testcontainers.org/modules/databases/mongodb/) was used to implement integration testing.
 
 ## Project Diagram
 

@@ -6,18 +6,26 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import javax.naming.OperationNotSupportedException;
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,15 +49,17 @@ class CityServiceTests {
   private CityServiceImpl cityService;
 
   @Test
-  void testPopulateDefaultData() {
+  void testPopulateDefaultData() throws IOException, CsvValidationException {
     List<CityEntity> defaultCities = new ArrayList<>();
-    defaultCities
-        .add(CityEntity.builder().id("1").name("Tokyo").photo("https://upload.wikimedia.org/Tokio.jpg").build());
-    defaultCities.add(
-        CityEntity.builder().id("2").name("Jakarta").photo("https://upload.wikimedia.org/Jakarta_Pictures-1.jpg")
-            .build());
-    defaultCities
-        .add(CityEntity.builder().id("3").name("Delhi").photo("https://upload.wikimedia.org/IN-DL.svg.png").build());
+    InputStream inputStream = new ClassPathResource("cities.csv").getInputStream();
+    CSVReader csvReader = new CSVReaderBuilder(new InputStreamReader(inputStream, StandardCharsets.UTF_8))
+        .withSkipLines(1).build();
+    String[] line;
+    while ((line = csvReader.readNext()) != null) {
+      CityEntity city = CityEntity.builder().id(line[0]).name(line[1]).photo(line[2]).build();
+      defaultCities.add(city);
+    }
+
     when(cityRepository.saveAll(defaultCities)).thenReturn(defaultCities);
     cityService.populateDefaultData();
     verify(cityRepository).saveAll(defaultCities);

@@ -1,17 +1,13 @@
 package com.yatsevich.citylist.api.adapter.in;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
@@ -26,10 +22,14 @@ import com.yatsevich.citylist.api.adapter.out.persistence.model.CityEntity;
 import com.yatsevich.citylist.api.adapter.out.persistence.repository.CityRepository;
 import com.yatsevich.citylist.api.boot.security.UserAuthority;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @AutoConfigureMockMvc
-@ActiveProfiles({"test"})
-class CityApiServiceIntegrationTest {
+@ActiveProfiles({ "test" })
+class CityApiServiceIntegrationTest extends AbstractIntegrationTest {
+
+  public static final String LYON = "Lyon";
+  public static final String PHOTO_1 = "photo1";
+  public static final String ID_1 = "1";
+  public static final String DELHI = "Delhi";
 
   @Autowired
   private MockMvc mockMvc;
@@ -42,11 +42,6 @@ class CityApiServiceIntegrationTest {
 
   private String getUrl() {
     return "/api/" + version + "/cities";
-  }
-
-  @BeforeEach
-  void setup() {
-    cityRepository.deleteAll();
   }
 
   @Test
@@ -63,61 +58,54 @@ class CityApiServiceIntegrationTest {
   @Test
   @WithMockUser(username = "user", authorities = UserAuthority.READ_ONLY_AUTHORITY)
   void testFindCities() throws Exception {
-    // Add some test cities to the repository
-    List<CityEntity> cityEntities = new ArrayList<>();
-    cityEntities.add(CityEntity.builder().id("1").name("City 1").photo("photo1.jpg").build());
-    cityEntities.add(CityEntity.builder().id("2").name("City 2").photo("photo2.jpg").build());
-    cityRepository.saveAll(cityEntities);
-
     // Perform the GET request to the endpoint
-    MvcResult result = mockMvc.perform(
-        MockMvcRequestBuilders.get(getUrl())
-        .param("name", "City 1")
-        .param("pageNumber", "0")
-        .param("pageSize", "10"))
+    MvcResult result = mockMvc
+        .perform(
+            MockMvcRequestBuilders.get(getUrl()).param("name", DELHI).param("pageNumber", "0").param("pageSize", "10"))
         .andExpect(status().isOk()).andReturn();
 
     // Verify the response
     String responseJson = result.getResponse().getContentAsString();
     GetCitiesResponseDto responseDto = new ObjectMapper().readValue(responseJson, GetCitiesResponseDto.class);
 
-    assertEquals(1, responseDto.getCities().size());
-    assertEquals(1, responseDto.getTotal());
+    assertEquals(2, responseDto.getCities().size());
+    assertEquals(2, responseDto.getTotal());
     assertEquals(0, responseDto.getPageNumber());
     assertEquals(10, responseDto.getPageSize());
-    assertEquals("City 1", responseDto.getCities().get(0).getName());
   }
 
   @Test
   @WithMockUser(username = "admin", authorities = UserAuthority.FULL_AUTHORITY)
   void testUpdateCity() throws Exception {
     // Add a test city to the repository
-    CityEntity city = cityRepository.save(CityEntity.builder().id("1").name("City 1").photo("photo").build());
+    CityEntity cityBeforeUpdate = cityRepository.findById(ID_1).get();
     // Perform the PUT request to the endpoint
-    UpdateCityRequestDto requestDto = new UpdateCityRequestDto("1", "Lyon", "photo1");
-    MvcResult result = mockMvc.perform(
-        MockMvcRequestBuilders.put(getUrl() + "/{id}", city.getId())
-           .contentType(MediaType.APPLICATION_JSON)
-           .content(new ObjectMapper().writeValueAsString(requestDto)))
-           .andExpect(status().isOk()).andReturn();
+    UpdateCityRequestDto requestDto = new UpdateCityRequestDto(ID_1, LYON, PHOTO_1);
+    MvcResult result = mockMvc
+        .perform(
+            MockMvcRequestBuilders.put(getUrl() + "/{id}", cityBeforeUpdate.getId())
+                .contentType(MediaType.APPLICATION_JSON).content(new ObjectMapper().writeValueAsString(requestDto)))
+        .andExpect(status().isOk()).andReturn();
 
     // Verify the response
     assertEquals("", result.getResponse().getContentAsString());
-    CityEntity cityEntity = cityRepository.findById(city.getId()).get();
-    assertEquals("Lyon", cityEntity.getName());
-    assertEquals("photo1", cityEntity.getPhoto());
+    CityEntity cityAfterUpdate = cityRepository.findById(cityBeforeUpdate.getId()).get();
+    assertEquals(LYON, cityAfterUpdate.getName());
+    assertEquals(PHOTO_1, cityAfterUpdate.getPhoto());
+    assertNotEquals(cityBeforeUpdate.getPhoto(), cityAfterUpdate.getPhoto());
+    assertNotEquals(cityBeforeUpdate.getName(), cityAfterUpdate.getName());
+    assertNotEquals(cityBeforeUpdate.getVersion(), cityAfterUpdate.getVersion());
   }
 
   @Test
   @WithMockUser(username = "admin", authorities = UserAuthority.FULL_AUTHORITY)
   void testUpdateInternalServerError() throws Exception {
-    UpdateCityRequestDto requestDto = new UpdateCityRequestDto("1", "Lyon", "photo1");
+    UpdateCityRequestDto requestDto = new UpdateCityRequestDto("9999", LYON, PHOTO_1);
     mockMvc
         .perform(
-            MockMvcRequestBuilders.put(getUrl() + "/{id}", requestDto.getId())
-                .contentType(MediaType.APPLICATION_JSON)
+            MockMvcRequestBuilders.put(getUrl() + "/{id}", requestDto.getId()).contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(requestDto)))
-                .andExpect(status().isInternalServerError());
+        .andExpect(status().isInternalServerError());
 
   }
 
@@ -125,28 +113,20 @@ class CityApiServiceIntegrationTest {
   @WithMockUser(username = "user", authorities = UserAuthority.READ_ONLY_AUTHORITY)
   void testUpdateForbidden() throws Exception {
     // Perform the PUT request to the endpoint
-    UpdateCityRequestDto requestDto = new UpdateCityRequestDto("1", "Lyon", "photo");
+    UpdateCityRequestDto requestDto = new UpdateCityRequestDto(ID_1, LYON, "photo");
     mockMvc.perform(
-        MockMvcRequestBuilders.put(getUrl() + "/{id}", requestDto.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(requestDto)))
-                .andExpect(status().isForbidden());
+        MockMvcRequestBuilders.put(getUrl() + "/{id}", requestDto.getId()).contentType(MediaType.APPLICATION_JSON)
+            .content(new ObjectMapper().writeValueAsString(requestDto)))
+        .andExpect(status().isForbidden());
   }
 
   @Test
   @WithMockUser(username = "user", authorities = UserAuthority.READ_ONLY_AUTHORITY)
   void testGetCitiesAmount() throws Exception {
-    // Add some test cities to the repository
-    List<CityEntity> cityEntities = new ArrayList<>();
-    cityEntities.add(CityEntity.builder().id("1").name("City 1").photo("photo1.jpg").build());
-    cityEntities.add(CityEntity.builder().id("2").name("City 2").photo("photo2.jpg").build());
-    cityRepository.saveAll(cityEntities);
-
     // Perform the GET request to the endpoint
-    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getUrl() + "/count"))
-            .andExpect(status().isOk())
-            .andReturn();
+    MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(getUrl() + "/count")).andExpect(status().isOk())
+        .andReturn();
 
-    assertEquals("2", result.getResponse().getContentAsString());
+    assertEquals("1000", result.getResponse().getContentAsString());
   }
 }
