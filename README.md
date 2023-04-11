@@ -1,6 +1,7 @@
 ## Description
 The goal of this project is to implement an application called 'city-list' to manage cities. The project contains back-end [`Spring Boot`](https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/) application called `city-list-api` 
 and font-end [ReactJS](https://reactjs.org/) application called `city-list-ui`. The back-end application uses [`MongoDB`](https://www.mongodb.com) as data storage. The initial data for DB is loaded from [cities.csv](city-list-api%2Fsrc%2Fmain%2Fresources%2Fcities.csv) sitting in resource folder. [`Basic Authentication`](https://en.wikipedia.org/wiki/Basic_access_authentication) is implemented to secure the applications. [`MongoDB test container`](https://www.testcontainers.org/modules/databases/mongodb/) was used to implement integration testing.
+The docker image of the application is uploaded to https://hub.docker.com, the image is `sergei5553/city-list:0.0.1`.
 
 ## Project Diagram
 
@@ -43,7 +44,17 @@ You can take a look at endpoint documentation using this URL http://localhost:80
 
   `city-list-ui` uses [`Semantic UI React`](https://react.semantic-ui.com/) as CSS-styled framework.
 
+## Start Application without build
+The docker image of the application is uploaded to https://hub.docker.com, the image is `sergei5553/city-list:0.0.1`.
+You can use this docker compose file to start app without build. [docker-compose.yml](documentation%2Fdocker-compose.yml)
+ - Go to   [documentation](documentation) folder and run
+```
+  docker-compose up
+  ```
+
 ## Build city-list application using Maven
+
+You can use below instruction if you want to change something in app to play.
 
 - **city-list-api**
 
@@ -56,7 +67,7 @@ You can take a look at endpoint documentation using this URL http://localhost:80
 
 Note: You can use IntelliJ IDEA to build and run application using GUI.
 
-## Start Application
+## Start Application after build
 
 - In a terminal, make sure you are inside [city-list-api](city-list-api) root folder and see [docker-compose.yml](city-list-api%2Fdocker-compose.yml)
 
