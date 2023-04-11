@@ -99,10 +99,11 @@ You need to clean up docker compose file. The result should be:
 
 ## Applications URLs
 
-| Application   | URL                                         | Credentials                        |
-|---------------|---------------------------------------------|------------------------------------|
+| Application | URL                                         | Credentials                        |
+|-------------|---------------------------------------------|------------------------------------|
 | city-list-api | http://localhost:8080/swagger-ui/index.html | `admin/admin123`, `user/user123`    |
-| city-list-ui  | http://localhost:3000                       | `admin/admin123`, `user/user123`   |
+| city-list-ui | http://localhost:3000                       | `admin/admin123`, `user/user123`   |
+| city-list  | http://localhost:8080/                      | `admin/admin123`, `user/user123`   |
 
 > **Note**: the credentials shown in the table are the ones already pre-defined in [application.yml](city-list-api%2Fsrc%2Fmain%2Fresources%2Fapplication.yml).
 
